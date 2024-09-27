@@ -1,0 +1,31 @@
+{
+  "name": "priolo-inventory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "grunt",
+    "init": "grunt init",
+    "stop": "grunt stop",
+    "docker-build": "docker-compose build",
+    "build-server": "cd server && npm run build",
+    "build-client": "cd client && npm run build",
+    "build": "npm run build-server && npm run build-client",
+    "deploy": "npm run build && cd server/dist && eb deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Spadanera/gig-addicted.git"
+  },
+  "author": "Nicola Zirilli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Spadanera/gig-addicted/issues"
+  },
+  "homepage": "https://github.com/Spadanera/gig-addicted#readme",
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-exec": "^3.0.0"
+  }
+}

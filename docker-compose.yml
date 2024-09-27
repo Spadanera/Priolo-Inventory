@@ -1,0 +1,62 @@
+version: "3.3"
+
+services:
+  client:
+    build: ./client
+    ports:
+      - 8080:8080
+    volumes:
+      - ./client:/data
+    environment:
+      - VUE_APP_API=rest
+    networks:
+      - proxy_net
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - 3000
+      - 9229:9229
+    restart: always
+    volumes:
+      - ./server:/data
+    depends_on: 
+      - server-database
+    environment:
+      CONNECTION_STRING: 'Server=server-database;Database=PrioloInventory;Uid=user;Pwd=password;'
+      ORIGIN: 'localhost'
+      PROTOCOL: 'http'
+    networks:
+      - proxy_net
+    
+  server-database:
+    image: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'PrioloInventory'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    networks:
+      - proxy_net
+      
+  proxy: 
+    image: nginx 
+    volumes: # mount custom config at runtime 
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf 
+    links:
+    - client:client # "app" is the hostname used in proxy_pass directive
+    - server:server # "app" is the hostname used in proxy_pass directive
+    ports: 
+      - 80:80 
+    networks:
+      - proxy_net
+networks:
+  proxy_net:
+    driver: bridge
+
+    
