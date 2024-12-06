@@ -1,2 +1,8 @@
 flask
 Flask-CORS
+
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+ollama
