@@ -1,3 +1,0 @@
-Per ogni cantiere con molteplici scale, vanno distinti tra di loro, quindi oguno avrà un PK_id_cantiere
-
-aggingere relazione tra cantiere e dettaglioOrdine per poter sapere pe ogni cantiere che mayteriale abbiamo comprato
