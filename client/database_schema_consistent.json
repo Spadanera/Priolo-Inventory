@@ -1,0 +1,155 @@
+{
+    "tables": {
+        "bolle_uscita": {
+            "columns": {
+                "PK_id_bolla": "bigint",
+                "data_uscita": "date",
+                "stato": "varchar(50)",
+                "note": "text",
+                "FK_id_cantiere_destinazione": "bigint",
+                "conducente": "varchar(255)",
+                "FK_targaMezzo": "varchar(255)"
+            },
+            "relations": {
+                "FK_id_cantiere_destinazione": "cantieri.PK_id_cantiere",
+                "FK_targaMezzo": "veicoli.PK_targa"
+            }
+        },
+        "cantieri": {
+            "columns": {
+                "PK_id_cantiere": "bigint",
+                "nome": "varchar(255)",
+                "nome2": "varchar(255)",
+                "indirizzo": "varchar(255)",
+                "ingegnere": "varchar(255)",
+                "supervisore": "varchar(255)",
+                "dataInizio": "date",
+                "dataFine": "date",
+                "numeroPiani": "int",
+                "numeroServizi": "int",
+                "capacitaPesoMassima": "bigint"
+            },
+            "relations": {}
+        },
+        "dettagli_bolle_uscita": {
+            "columns": {
+                "PK_id_dettaglio": "bigint",
+                "FK_id_bolla": "bigint",
+                "FK_id_prodotto": "bigint",
+                "quantita_uscita": "bigint",
+                "prezzo_totale": "decimal(10,2)"
+            },
+            "relations": {
+                "FK_id_bolla": "bolle_uscita.PK_id_bolla",
+                "FK_id_prodotto": "prodotti.PK_id_prodotto"
+            }
+        },
+        "prodotti": {
+            "columns": {
+                "PK_id_prodotto": "bigint",
+                "nome": "varchar(100)",
+                "modello": "varchar(255)",
+                "marca": "varchar(255)",
+                "prezzo": "decimal(10,2)",
+                "quantita_disponibile": "bigint",
+                "codice_ean": "varchar(255)",
+                "codice_altro": "varchar(255)",
+                "sellerOrderNumber": "varchar(255)",
+                "CustomerOrderNumber": "varchar(255)",
+                "EquipmentNumber": "varchar(255)",
+                "ProjectNumber": "varchar(255)",
+                "ExternalIdentification": "varchar(255)"
+            },
+            "relations": {}
+        },
+        "veicoli": {
+            "columns": {
+                "PK_targa": "varchar(20)",
+                "nome": "varchar(100)",
+                "modello": "varchar(100)",
+                "marca": "varchar(100)",
+                "anno_immatricolazione": "year",
+                "colore": "varchar(50)",
+                "alimentazione": "varchar(50)",
+                "cilindrata": "int",
+                "inManutenzione": "boolean",
+                "note": "text"
+            },
+            "relations": {}
+        },
+        "ordini_fornitori": {
+            "columns": {
+                "PK_id_ordine": "bigint",
+                "FK_id_fornitore": "bigint",
+                "data_ordine": "date",
+                "stato": "varchar(50)",
+                "conducenteNome": "varchar(255)"
+            },
+            "relations": {
+                "FK_id_fornitore": "fornitori.PK_id_fornitore"
+            }
+        },
+        "fornitori": {
+            "columns": {
+                "PK_id_fornitore": "bigint",
+                "nome": "varchar(100)",
+                "contatti": "varchar(255)",
+                "indirizzo": "varchar(255)",
+                "codiceSDI": "varchar(255)",
+                "partitaIVA": "varchar(255)",
+                "iban": "varchar(255)",
+                "numeroTelefono": "varchar(255)",
+                "annotazioni": "text"
+            },
+            "relations": {}
+        },
+        "dettagli_ordini_fornitori": {
+            "columns": {
+                "PK_id_dettaglio": "bigint",
+                "FK_id_ordine": "bigint",
+                "FK_id_prodotto": "bigint",
+                "quantit\u00e0_ordinata": "bigint",
+                "prezzo_totale": "decimal(10,2)",
+                "FK_id_cantiere": "bigint"
+            },
+            "relations": {
+                "FK_id_ordine": "ordini_fornitori.PK_id_ordine",
+                "FK_id_prodotto": "prodotti.PK_id_prodotto",
+                "FK_id_cantiere": "cantieri.PK_id_cantiere"
+            }
+        },
+        "ordini_clienti": {
+            "columns": {
+                "PK_id_ordini": "bigint",
+                "numeroFattura": "varchar(255)",
+                "valore": "decimal(10,2)",
+                "orderNumber": "varchar(255)",
+                "item": "bigint",
+                "soNumber": "varchar(255)",
+                "ordineDescrizione": "varchar(255)",
+                "FK_id_cantiere": "bigint",
+                "stato": "varchar(255)",
+                "scadenza": "date",
+                "annotazioni": "text",
+                "extraDalPreventivoBool": "bit(1)"
+            },
+            "relations": {
+                "FK_id_cantiere": "cantieri.PK_id_cantiere"
+            }
+        },
+        "preventivi": {
+            "columns": {
+                "PK_id_preventivo": "bigint",
+                "numeroPreventivo": "varchar(255)",
+                "valorePreventivo": "decimal(10,2)",
+                "valoreExtraOpzionale": "decimal(10,2)",
+                "scontoEffettuato": "decimal(10,2)",
+                "FK_id_cantiere": "bigint",
+                "stato": "varchar(255)"
+            },
+            "relations": {
+                "FK_id_cantiere": "cantieri.PK_id_cantiere"
+            }
+        }
+    }
+}
