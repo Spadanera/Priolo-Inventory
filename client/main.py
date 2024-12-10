@@ -14,7 +14,7 @@ DB_CONFIG = {
 }
 
 # Modello di Ollama
-OLLAMA_MODEL = 'qwen2.5-coder:7b'
+OLLAMA_MODEL = 'qwen2.5-coder:latest'
 
 
 def get_db_structure():
@@ -24,118 +24,158 @@ def get_db_structure():
     db_structure = {
         "database": "PrioloInventory",
         "tables": {
-        "bolle_uscita": [
-            "PK_id_bolla",
-            "data_uscita",
-            "stato",
-            "note",
-            "FK_id_cantiere_destinazione",
-            "conducente",
-            "FK_targaMezzo"
-        ],
-        "cantieri": [
-            "PK_id_cantiere",
-            "nome",
-            "nome2",
-            "indirizzo",
-            "ingegnere",
-            "supervisore",
-            "dataInizio",
-            "dataFine",
-            "numeroPiani",
-            "numeroServizi",
-            "capacitaPesoMassima"
-        ],
-        "dettagli_bolle_uscita": [
-            "PK_id_dettaglio",
-            "FK_id_bolla",
-            "FK_id_prodotto",
-            "quantita_uscita",
-            "prezzo_totale"
-        ],
-        "dettagli_ordini_fornitori": [
-            "PK_id_dettaglio",
-            "FK_id_ordine",
-            "FK_id_prodotto",
-            "quantità_ordinata",
-            "prezzo_totale",
-            "FK_id_cantiere"
-        ],
-        "fornitori": [
-            "PK_id_fornitore",
-            "nome",
-            "contatti",
-            "indirizzo",
-            "email",
-            "codiceSDI",
-            "partitaIva",
-            "iban",
-            "numeroTelefono",
-            "annotazioni"
-        ],
-        "ordini_clienti": [
-            "PK_id_ordini",
-            "numeroFattura",
-            "valore",
-            "orderNumber",
-            "item",
-            "soNumber",
-            "pos",
-            "lavorazioneDescrizione",
-            "FK_id_cantiere",
-            "stato",
-            "scadenza",
-            "extra",
-            "annotazioni",
-            "extraDalPreventivoBool"
-        ],
-        "ordini_fornitori": [
-            "PK_id_ordine",
-            "FK_id_fornitore",
-            "data_ordine",
-            "stato",
-            "conducenteNome"
-        ],
-        "preventivi": [
-            "PK_id_preventivo",
-            "numeroPreventivo",
-            "valorePreventivo",
-            "valoreExtraOpzionale",
-            "scontoEffettuato",
-            "FK_id_cantiere",
-            "stato"
-        ],
-        "prodotti": [
-            "PK_id_prodotto",
-            "nome",
-            "modello",
-            "marca",
-            "prezzo",
-            "quantità_disponibile",
-            "codice_ean",
-            "codice_altro",
-            "sellerOrderNumber",
-            "networkNumber",
-            "CustomerOrderNumber",
-            "PurchaseOrderNumber",
-            "EquipmentNumber",
-            "ProjectNumber",
-            "ExternalIdentification"
-        ],
-        "veicoli": [
-            "PK_targa",
-            "nome",
-            "modello",
-            "marca",
-            "anno_immatricolazione",
-            "colore",
-            "tipo",
-            "alimentazione",
-            "chilometraggio",
-            "nextManutenzione",
-            "note"
-        ]
-    }
+            "bolle_uscita": {
+                "columns": {
+                    "PK_id_bolla": "bigint",
+                    "data_uscita": "date",
+                    "stato": "varchar(50)",
+                    "note": "text",
+                    "FK_id_cantiere_destinazione": "bigint",
+                    "conducente": "varchar(255)",
+                    "FK_targaMezzo": "varchar(255)"
+                },
+                "relations": {
+                    "FK_id_cantiere_destinazione": "cantieri.PK_id_cantiere",
+                    "FK_targaMezzo": "veicoli.PK_targa"
+                }
+            },
+            "cantieri": {
+                "columns": {
+                    "PK_id_cantiere": "bigint",
+                    "nome": "varchar(255)",
+                    "nome2": "varchar(255)",
+                    "indirizzo": "varchar(255)",
+                    "ingegnere": "varchar(255)",
+                    "supervisore": "varchar(255)",
+                    "dataInizio": "date",
+                    "dataFine": "date",
+                    "numeroPiani": "int",
+                    "numeroServizi": "int",
+                    "capacitaPesoMassima": "bigint"
+                },
+                "relations": {}
+            },
+            "dettagli_bolle_uscita": {
+                "columns": {
+                    "PK_id_dettaglio": "bigint",
+                    "FK_id_bolla": "bigint",
+                    "FK_id_prodotto": "bigint",
+                    "quantita_uscita": "bigint",
+                    "prezzo_totale": "decimal(10,2)"
+                },
+                "relations": {
+                    "FK_id_bolla": "bolle_uscita.PK_id_bolla",
+                    "FK_id_prodotto": "prodotti.PK_id_prodotto"
+                }
+            },
+            "prodotti": {
+                "columns": {
+                    "PK_id_prodotto": "bigint",
+                    "nome": "varchar(100)",
+                    "modello": "varchar(255)",
+                    "marca": "varchar(255)",
+                    "prezzo": "decimal(10,2)",
+                    "quantita_disponibile": "bigint",
+                    "codice_ean": "varchar(255)",
+                    "codice_altro": "varchar(255)",
+                    "sellerOrderNumber": "varchar(255)",
+                    "CustomerOrderNumber": "varchar(255)",
+                    "EquipmentNumber": "varchar(255)",
+                    "ProjectNumber": "varchar(255)",
+                    "ExternalIdentification": "varchar(255)"
+                },
+                "relations": {}
+            },
+            "veicoli": {
+                "columns": {
+                    "PK_targa": "varchar(20)",
+                    "nome": "varchar(100)",
+                    "modello": "varchar(100)",
+                    "marca": "varchar(100)",
+                    "anno_immatricolazione": "year",
+                    "colore": "varchar(50)",
+                    "alimentazione": "varchar(50)",
+                    "cilindrata": "int",
+                    "inManutenzione": "boolean",
+                    "note": "text"
+                },
+                "relations": {}
+            },
+            "ordini_fornitori": {
+                "columns": {
+                    "PK_id_ordine": "bigint",
+                    "FK_id_fornitore": "bigint",
+                    "data_ordine": "date",
+                    "stato": "varchar(50)",
+                    "conducenteNome": "varchar(255)"
+                },
+                "relations": {
+                    "FK_id_fornitore": "fornitori.PK_id_fornitore"
+                }
+            },
+            "fornitori": {
+                "columns": {
+                    "PK_id_fornitore": "bigint",
+                    "nome": "varchar(100)",
+                    "contatti": "varchar(255)",
+                    "indirizzo": "varchar(255)",
+                    "codiceSDI": "varchar(255)",
+                    "partitaIVA": "varchar(255)",
+                    "iban": "varchar(255)",
+                    "numeroTelefono": "varchar(255)",
+                    "annotazioni": "text"
+                },
+                "relations": {}
+            },
+            "dettagli_ordini_fornitori": {
+                "columns": {
+                    "PK_id_dettaglio": "bigint",
+                    "FK_id_ordine": "bigint",
+                    "FK_id_prodotto": "bigint",
+                    "quantità_ordinata": "bigint",
+                    "prezzo_totale": "decimal(10,2)",
+                    "FK_id_cantiere": "bigint"
+                },
+                "relations": {
+                    "FK_id_ordine": "ordini_fornitori.PK_id_ordine",
+                    "FK_id_prodotto": "prodotti.PK_id_prodotto",
+                    "FK_id_cantiere": "cantieri.PK_id_cantiere"
+                }
+            },
+            "ordini_clienti": {
+                "columns": {
+                    "PK_id_ordini": "bigint",
+                    "numeroFattura": "varchar(255)",
+                    "valore": "decimal(10,2)",
+                    "orderNumber": "varchar(255)",
+                    "item": "bigint",
+                    "soNumber": "varchar(255)",
+                    "ordineDescrizione": "varchar(255)",
+                    "FK_id_cantiere": "bigint",
+                    "stato": "varchar(255)",
+                    "scadenza": "date",
+                    "annotazioni": "text",
+                    "extraDalPreventivoBool": "bit(1)"
+                },
+                "relations": {
+                    "FK_id_cantiere": "cantieri.PK_id_cantiere"
+                }
+            },
+            "preventivi": {
+                "columns": {
+                    "PK_id_preventivo": "bigint",
+                    "numeroPreventivo": "varchar(255)",
+                    "valorePreventivo": "decimal(10,2)",
+                    "valoreExtraOpzionale": "decimal(10,2)",
+                    "scontoEffettuato": "decimal(10,2)",
+                    "FK_id_cantiere": "bigint",
+                    "stato": "varchar(255)"
+                },
+                "relations": {
+                    "FK_id_cantiere": "cantieri.PK_id_cantiere"
+                }
+            }
+        }
     }
     return json.dumps(db_structure, indent=4)
 
@@ -145,8 +185,6 @@ def translate_to_sql(user_request, db_structure):
     Trasforma una richiesta in linguaggio naturale in una query SQL usando Ollama.
     """
     prompt = (
-        f"in base a questa struttura:\n"
-        f"{db_structure}\n\n"
         f"Trasforma la seguente richiesta in una query SQL: "
         f"'{user_request}'"
     )
@@ -154,13 +192,19 @@ def translate_to_sql(user_request, db_structure):
     # Aggiungi il formato corretto per Ollama
     messages = [
         {"role": "system",
-         "content": "Sei un assistente AI che traduce richieste in linguaggio naturale in query SQL."},
+         "content": f"Sei un assistente AI che traduce richieste in linguaggio naturale in query mySQL. Questa è la struttura del Database mySQL con il quale comunicare: {db_structure}"},
         {"role": "user", "content": prompt}
     ]
+
+
+    print(messages)
 
     # Richiesta di risposta dal modello
     response = chat(OLLAMA_MODEL, messages=messages)
     content = response.get('message', {}).get('content', '')
+
+    print(response)
+    print(messages)
 
     # Estrai la query SQL dalla risposta
     start_index = content.find("```sql") + 7
